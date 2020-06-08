@@ -4,6 +4,7 @@
 
 EMAIL_ACTION_NAME = "Email Action"
 POLL_INTERVAL_IN_SECONDS = 5
+DIFFERENCE_THRESHOLD_IN_AMPS = 0.1
 
 require "Pdu"
 require "EventEngine"
@@ -74,10 +75,20 @@ while true do
     outletname = current[i][3]
 
     if (lastp == 1) and (currentp == 1) then
-      if (lastc > 0) and (currentc == 0) then
-        local subject = "Outlet " .. i .. " (" .. outletname .. ") on PDU " .. pduset.name .. " has stopped drawing current"
-        local messagebody = "Outlet: " .. i .. " (" .. outletname .. ")" .. "\nPDU: " .. pduset.name .. "\nModel: " .. pdumd.nameplate.model
-        sendemail(ee, emailaction, subject, messagebody)
+      diff = lastc - currentc
+      if diff < 0 then
+        diff = diff * -1
+      end
+      if diff > DIFFERENCE_THRESHOLD_IN_AMPS then
+        local subject = "Outlet " .. i .. " (" .. outletname .. ") on PDU " .. pduset.name .. " has exceeded the current difference threshold of " .. DIFFERENCE_THRESHOLD_IN_AMPS .. " amps"
+        local msg = ""
+        msg = msg .. "Outlet: " .. i .. " (" .. outletname .. ")\n"
+        msg = msg .. "Last current value: " .. tostring(lastc) .. " amps\n"
+        msg = msg .. "This current value: " .. tostring(currentc) .. " amps\n"
+        msg = msg .. "Difference: " .. diff .. " amps\n"
+        msg = msg .. "PDU: " .. pduset.name .. "\n"
+        msg = msg .. "Model: " .. pdumd.nameplate.model .. "\n"
+        sendemail(ee, emailaction, subject, msg)
       end
     end
   end
