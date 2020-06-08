@@ -27,11 +27,12 @@ End
 ## monitor-current.lua
 
 This script monitors the current being drawn on each outlet on the PDU.
-If an outlet goes from a state of drawing current to not drawing any current
-then an email is sent via the action "Email Action" on the PDU.
+If the difference between the last reading taken and the most recent reading
+exceeds a threshold and email is sent. A significant fluctuation in 
+the amount of current being drawn from an outlet could be of interest.
 
-I recommend changing the value of the `POLL_INTERVAL_IN_SECONDS` to
-something appropriate for your PDU environment. 60 for sixty seconds would be
-a good starting point.
+I recommend changing the values of `POLL_INTERVAL_IN_SECONDS` and
+`THRESHOLD_VALUE_IN_AMPS` to
+something appropriate for your PDU environment.
 
 ----------------------------------------------------
