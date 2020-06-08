@@ -28,7 +28,7 @@ End
 
 This script monitors the current being drawn on each outlet on the PDU.
 If the difference between the last reading taken and the most recent reading
-exceeds a threshold and email is sent. A significant fluctuation in 
+exceeds a threshold then an email is sent. A significant fluctuation in 
 the amount of current being drawn from an outlet could be of interest.
 
 I recommend changing the values of `POLL_INTERVAL_IN_SECONDS` and
