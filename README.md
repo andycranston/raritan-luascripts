@@ -56,7 +56,7 @@ These values should help the person configuring the outlet thresholds on the PDU
 By default the script runs for 10 minutes and takes samples at 5 second intervals. These
 values can be changed by starting the script using the `Start With Arguments` option.
 To specify a different amount of time the script should run add an argument called `duration`
-and set the value to the number of minutes. To specify a different sampling rate/interval
+and set the value to the number of minutes. To specify a different sampling interval
 add an argument called `interval` and set the value to the number of seconds to wait between
 taking a sample.
 
