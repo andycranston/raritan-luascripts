@@ -5,15 +5,22 @@
 The `threshold-helper.lua` script is for Raritan intelligent PDUs which have individually metered outlets.
 
 By default it runs for 10
-minutes and takes samples very 5 seconds of the following values:
+minutes and takes samples every 5 seconds of the following values:
 
 + RMS Current
 + Active Power
 + Power Factor
 + RMS Voltage
 
-After the default 10 minutes it displays a summary for each outlet and value showing the minumum,
-maximum and the average value.
+After the default 10 minutes it displays a summary for each outlet similar to this example:
+
+```
+Outlet: HP Layer 3 Switch
+  RMS Current        Min:   0.101  Avg:   0.103  Max:   0.106
+  Active Power       Min:  14      Avg:  14      Max:  14
+  Power Factor       Min:   0.57   Avg:   0.59   Max:   0.59 
+  RMS Voltage        Min: 232.4    Avg: 234.7    Max: 236.3
+```
 
 ## Why is this useful?
 
@@ -21,34 +28,34 @@ Raritan intelligent PDUs can be configured with threshold values on each outlet.
 is crossed the PDU can raise an alert (e.g. send an email).
 
 The `threshold-helper.lua` script can be used to get an idea of what `normal` values are and this
-should help in determining effective threshold values to set on eahc PDU.
+should help in determining effective threshold values to set on each PDU.
 
 ## Changing default duration and/or interval
 
-To change the default duration of 10 minutes and/or the sampling interval of 5 seconds use
+To change the default duration of 10 minutes and/or the default sampling interval of 5 seconds use
 the "Start With Arguments" menu option on the Lua scripts page of the PDU web interface.
 
 To change duration specify an argument called `duration` and enter value for the number of minutes to run the
 script.
 
-To change sampling interval specify an argument called `interval` and enter value for the number of seconds to run the
-script.
+To change sampling interval specify an argument called `interval` and enter value for the number of seconds
+to wait between samples.
 
 ## Powered off outlets
 
 The script also monitors the power state of the outlets.
 
 If an outlet was powered off every time it was
-sampled then a message:
+sampled then a message similar to:
 
 ```
 (likely powered off)
 ```
 
-will appear after the name/number.
+will appear after the outlet name/number.
 
 If an outlet was powered off during at least one sample (but not all the samples)
-then this message:
+then a message similar to:
 
 ```
 (powered off some of the time)
