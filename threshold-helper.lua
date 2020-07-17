@@ -1,25 +1,15 @@
 --
---  threshold-helper.lua : sample outlet data and print summary to help set thresholds
+--  @(!--#) @(#) threshold-helper.lua, version 012, 17-kjuly-2020
+
+-- sample outlet data and print summary to help set thresholds
+--
+-- defaultArg duration "10"
+-- defaultArg interval "5"
 --
 
-duration = 10
-interval = 5
+duration = ARGS["duration"]
+interval = ARGS["interval"]
 
-if ARGS["duration"] ~= nil then
-  duration = ARGS["duration"]
-end
-if ARGS["d"] ~= nil then
-  duration = ARGS["d"]
-end
-
-if ARGS["interval"] ~= nil then
-  interval = ARGS["interval"]
-end
-if ARGS["i"] ~= nil then
-  interval = ARGS["i"]
-end
-
--- uncomment to make duration in minutes
 duration = duration * 60
 
 require "Pdu"
@@ -30,15 +20,39 @@ local outlets = pdu:getOutlets()
 
 local n = #outlets
 
+if n == 0 then
+  io.write("*** This PDU does not appear to have any outlets ***\n")
+  os.exit(1)
+end
+
+if outlets[1]:getSensors().current == nil then
+  io.write("*** This PDU does not appear to have metered outlets ***\n")
+  os.exit(1)
+end
+
 io.write("PDU has " .. n .. " outlets\n")
 
-io.write("Total sampling time is " .. tostring(duration // 60) .. " minutes and " .. tostring(duration % 60) .. " seconds\n")
+io.write("Total sampling time is " .. string.format("%d", (duration // 60)) .. " minute")
+if (duration // 60) ~= 1 then
+  io.write("s")
+end
+if (duration % 60) > 0 then
+  io.write(" and " .. string.format("%d", duration % 60) .. " second")
+  if (duration % 60) ~= 1 then
+    io.write("s")
+  end
+end
+io.write("\n")
 
-io.write("Sampling interval is " .. tostring(interval) .. " seconds\n")
+io.write("Sampling interval is " .. string.format("%d", interval) .. " second")
+if tonumber(interval) ~= 1 then
+  io.write("s")
+end
+io.write("\n")
 
 local samplecount = duration // interval
 
-io.write("Approximately " .. tostring(samplecount) .. " samples will be taken\n")
+io.write("A maximum of " .. string.format("%d", samplecount) .. " samples will be taken\n")
 
 local samplemodulo = 1
 if samplecount >= 10 then
@@ -52,10 +66,11 @@ local c = 0
 local ostat = {}
 for i = 1, n do
   ostat[i] = {}
-  ostat[i].current = {}
-  ostat[i].apower  = {}
-  ostat[i].powerf  = {}
-  ostat[i].voltage = {}
+  ostat[i].current  = {}
+  ostat[i].apower   = {}
+  ostat[i].powerf   = {}
+  ostat[i].voltage  = {}
+  ostat[i].offcount = 0
 end
 
 while os.time() <= finishtime do
@@ -130,6 +145,11 @@ while os.time() <= finishtime do
         ostat[i].voltage.max = voltage
       end
     end
+    -- Off counter
+    local pstate = outlet:getState().powerState
+    if pstate == pdumodel.Outlet.PowerState.PS_OFF then
+      ostat[i].offcount = ostat[i].offcount + 1
+    end
   end
 
   sleep(interval)
@@ -144,7 +164,14 @@ for i,outlet in ipairs(outlets) do
     outletname = tostring(i)
   end
 
-  io.write("Outlet: " .. outletname .. "\n")
+  io.write("\n")
+  io.write("Outlet: " .. outletname)
+  if ostat[i].offcount == c then
+    io.write(" (likely powered off)")
+  elseif ostat[i].offcount > 0 then
+    io.write(" (powered off some of the time)")
+  end
+  io.write("\n")
 
   io.write("  RMS Current      ")
   io.write("  Min: " .. string.format("%7.3f", ostat[i].current.min))
@@ -171,3 +198,7 @@ for i,outlet in ipairs(outlets) do
   io.write("\n")
 end
 
+io.write("\n")
+io.write("*** End of report ***\n")
+
+return 4
