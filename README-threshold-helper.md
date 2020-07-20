@@ -28,7 +28,7 @@ Raritan intelligent PDUs can be configured with threshold values on each outlet.
 is crossed the PDU can raise an alert (e.g. send an email).
 
 The `threshold-helper.lua` script can be used to get an idea of what `normal` values are and this
-should help in determining effective threshold values to set on each PDU.
+should help in determining effective threshold values to set on each outlet on each PDU.
 
 ## Changing default duration and/or interval
 
