@@ -1,4 +1,4 @@
-# lua-env.lua
+# lua-env.lua - output information about the Lua environment
 
 ## What does it do?
 

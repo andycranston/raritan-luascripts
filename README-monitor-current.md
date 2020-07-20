@@ -1,4 +1,4 @@
-# monitor-current.lua
+# monitor-current.lua - monitor current being drawn on the PDU outlets
 
 ## What does it do?
 

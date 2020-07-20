@@ -1,8 +1,10 @@
-# threshold-helper.lua
+# threshold-helper.lua - produce summary data to enable sensible threshold values to be set on each outlet
 
 ## What does it do?
 
 The `threshold-helper.lua` script is for Raritan intelligent PDUs which have individually metered outlets.
+
+It produces summary data to enable sensible threshold values to be set on each outlet.
 
 By default it runs for 10
 minutes and takes samples every 5 seconds of the following values:
