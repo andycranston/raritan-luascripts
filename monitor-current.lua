@@ -1,5 +1,7 @@
 --
---  monitor-current.lua : monitor for outlets exceeding a current change over a threshold
+-- @(!--#) @(#) monitor-current.lua, version 005, 20-july-2020
+--
+--monitor for outlets exceeding a current change over a threshold
 --
 
 EMAIL_ACTION_NAME = "Email Action"
@@ -80,12 +82,12 @@ while true do
         diff = diff * -1
       end
       if diff > DIFFERENCE_THRESHOLD_IN_AMPS then
-        local subject = "Outlet " .. i .. " (" .. outletname .. ") on PDU " .. pduset.name .. " - current delta of " .. tostring(diff) .. " amps"
+        local subject = "Outlet " .. i .. " (" .. outletname .. ") on PDU " .. pduset.name .. " - current delta of " .. string.format("%5.3f", diff) .. " amps"
         local msg = ""
         msg = msg .. "Outlet: " .. i .. " (" .. outletname .. ")\n"
-        msg = msg .. "Last current value: " .. tostring(lastc) .. " amps\n"
-        msg = msg .. "This current value: " .. tostring(currentc) .. " amps\n"
-        msg = msg .. "Current delta: " .. diff .. " amps\n"
+        msg = msg .. "Last current value: " .. string.format("%5.3f", lastc) .. " amps\n"
+        msg = msg .. "This current value: " .. string.format("%5.3f", currentc) .. " amps\n"
+        msg = msg .. "Current delta: " .. string.format("%5.3f", diff) .. " amps\n"
         msg = msg .. "PDU: " .. pduset.name .. "\n"
         msg = msg .. "Model: " .. pdumd.nameplate.model .. "\n"
         sendemail(ee, emailaction, subject, msg)
